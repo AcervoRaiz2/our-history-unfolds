@@ -36,7 +36,7 @@ function Game() {
     <main className="relative min-h-screen">
       {phase === "roulette-1" && (
         <Roulette
-          targetYear={ERAS[0].year}
+          targetYear={ERAS[0]!.year}
           title="Nuestra historia en tus manos"
           subtitle="Biblioteca Comunitaria Raíz de Barro"
           onFinish={() => setPhase("era-1")}
@@ -44,7 +44,7 @@ function Game() {
       )}
 
       {phase === "era-1" && (
-        <PopupBook era={ERAS[0]} onComplete={() => setPhase("glitch")} />
+        <PopupBook era={ERAS[0]!} onComplete={() => setPhase("glitch")} />
       )}
 
       {phase === "glitch" && <GlitchOverlay onExit={() => setPhase("roulette-2")} />}
@@ -52,7 +52,7 @@ function Game() {
       {phase === "roulette-2" && (
         <Roulette
           broken
-          targetYear={ERAS[1].year}
+          targetYear={ERAS[1]!.year}
           title="La rueda vuelve a girar"
           subtitle="Reiniciando la memoria"
           onFinish={() => setPhase("era-2")}
@@ -60,7 +60,7 @@ function Game() {
       )}
 
       {phase === "era-2" && (
-        <PopupBook era={ERAS[1]} onComplete={() => setPhase("ending")} />
+        <PopupBook era={ERAS[1]!} onComplete={() => setPhase("ending")} />
       )}
 
       {phase === "ending" && (

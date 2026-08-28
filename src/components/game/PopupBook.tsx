@@ -22,7 +22,7 @@ export function PopupBook({ era, onComplete }: Props) {
     return () => window.clearTimeout(t);
   }, [era]);
 
-  const page = era.pages[index];
+  const page = era.pages[index] ?? era.pages[0]!;
   const locked = !!page.challenge && !solvedIds.includes(page.id);
 
   const go = (dir: 1 | -1) => {
