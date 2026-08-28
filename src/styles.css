@@ -50,6 +50,8 @@
   --animate-flicker: flicker 4s ease-in-out infinite;
   --animate-glitch: glitch 0.22s steps(2, end) infinite;
   --animate-dust: dust 9s linear infinite;
+  --animate-leaf-forward: leaf-forward 0.85s cubic-bezier(0.4, 0, 0.2, 1) both;
+  --animate-leaf-back: leaf-back 0.85s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 :root {
@@ -216,4 +218,22 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* ---- Pasar página del libro ---- */
+@keyframes leaf-forward {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(-180deg);
+  }
+}
+@keyframes leaf-back {
+  from {
+    transform: rotateY(180deg);
+  }
+  to {
+    transform: rotateY(0deg);
+  }
 }
