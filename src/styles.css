@@ -217,3 +217,21 @@
   background-clip: text;
   color: transparent;
 }
+
+/* ---- Pasar página del libro ---- */
+@keyframes leaf-forward {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(-180deg);
+  }
+}
+@keyframes leaf-back {
+  from {
+    transform: rotateY(180deg);
+  }
+  to {
+    transform: rotateY(0deg);
+  }
+}
