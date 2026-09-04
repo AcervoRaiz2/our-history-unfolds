@@ -1,22 +1,13 @@
 /**
  * ============================================================================
- *  "Nuestra historia en tus manos" — CONTENIDO EDITABLE DEL JUEGO
+ *  "Nuestra historia en tus manos" — CONTENIDO BASE DEL JUEGO
  * ============================================================================
- *  Este archivo es el ÚNICO lugar donde debes editar textos, imágenes,
- *  desafíos y respuestas. El motor del juego (ruleta + libro pop-up) lee
- *  todo desde aquí.
+ *  Este archivo es el contenido POR DEFECTO. Todo se puede editar sin tocar
+ *  código desde la pantalla /editor (modo edición con acceso privado).
  *
- *  CÓMO AGREGAR UNA IMAGEN NUEVA:
- *   1. Sube el archivo a  src/assets/  (ej: src/assets/mi-escena.jpg)
- *   2. Impórtala arriba:  import miEscena from "@/assets/mi-escena.jpg";
- *   3. Úsala en la página:  image: miEscena
- *
- *  CÓMO AGREGAR UNA PÁGINA:
- *   Copia un bloque { id, title, ... } dentro de pages: [...] de la época.
- *
- *  CÓMO AGREGAR UN DESAFÍO:
- *   Añade  challenge: { ... }  a cualquier página. El jugador no podrá
- *   avanzar hasta resolverlo.
+ *  Las imágenes se referencian por CLAVE (ver IMAGE_LIBRARY abajo). También
+ *  puedes escribir una URL completa (https://...) o pegar una imagen propia
+ *  desde el editor.
  * ============================================================================
  */
 
@@ -27,14 +18,27 @@ import sceneJovenes from "@/assets/scene-jovenes.jpg";
 import sceneBiblioteca from "@/assets/scene-biblioteca.jpg";
 import sceneRaiz from "@/assets/scene-raiz.jpg";
 
+/** Biblioteca de imágenes disponibles: clave → archivo. */
+export const IMAGE_LIBRARY: Record<string, string> = {
+  chircales: sceneChircales,
+  leneras: sceneLeneras,
+  barrio: sceneBarrio,
+  jovenes: sceneJovenes,
+  biblioteca: sceneBiblioteca,
+  raiz: sceneRaiz,
+};
+
+/** Convierte una clave de imagen (o URL / data URL) en algo mostrable. */
+export function resolveImage(value: string): string {
+  return IMAGE_LIBRARY[value] ?? value;
+}
+
 /** Desafío tipo pregunta: elegir la opción correcta. */
 export type QuizChallenge = {
   kind: "quiz";
   prompt: string;
-  /** Pista opcional que aparece tras un intento fallido. */
   hint?: string;
   options: string[];
-  /** Índice (empezando en 0) de la opción correcta. */
   answerIndex: number;
   successText: string;
 };
@@ -49,11 +53,10 @@ export type OrderChallenge = {
   successText: string;
 };
 
-/** Desafío táctil: hacer clic/arrastrar N veces sobre el barro para moldear. */
+/** Desafío táctil: tocar N veces para moldear / juntar. */
 export type ForgeChallenge = {
   kind: "forge";
   prompt: string;
-  /** Número de toques necesarios para completar la acción. */
   taps: number;
   actionLabel: string;
   successText: string;
@@ -63,17 +66,11 @@ export type Challenge = QuizChallenge | OrderChallenge | ForgeChallenge;
 
 export type Page = {
   id: string;
-  /** Año o etiqueta pequeña que aparece sobre el título. */
   eyebrow: string;
   title: string;
-  /** PLACEHOLDER DE NARRACIÓN: aquí va tu texto. Puedes dejarlo vacío ("") */
-  narration: string;
-  /** Frase corta destacada tipo cita (opcional). */
-  quote?: string;
+  /** Clave de IMAGE_LIBRARY o URL completa. */
   image: string;
-  /** Texto alternativo accesible de la imagen. */
   imageAlt: string;
-  /** Desafío que bloquea el avance de la página (opcional). */
   challenge?: Challenge;
 };
 
@@ -85,13 +82,13 @@ export type Era = {
   pages: Page[];
 };
 
-/** Casillas de la ruleta (la aguja siempre se detiene donde marca el guion). */
-export const ROULETTE_YEARS = [
-  1970, 1985, 1994, 2001, 2007, 2012, 2015, 2020,
-] as const;
+export type GameContent = {
+  eras: Era[];
+  ending: { title: string; text: string };
+};
 
-/** Orden obligatorio de paradas de la ruleta a lo largo del juego. */
-export const FORCED_STOPS = [1970, 2012] as const;
+/** Casillas de la ruleta. */
+export const ROULETTE_YEARS = [1970, 1985, 1994, 2001, 2007, 2012, 2015, 2020] as const;
 
 export const ERAS: Era[] = [
   /* ======================= ÉPOCA 1 — 1970 ============================== */
@@ -105,20 +102,22 @@ export const ERAS: Era[] = [
         id: "e1-p1",
         eyebrow: "1970 · El origen",
         title: "El barrio que nació bajo la montaña",
-        narration:
-          "[NARRACIÓN 1] Había una vez, en el suroriente de Bogotá, un rincón que nació bajo la sombra de la montaña. En sus inicios era un bosque espeso: por eso lo llamaron La Arboleda.",
-        quote: "Muy cerca de allí, la tierra escondía una historia más pesada.",
-        image: sceneChircales,
+        image: "chircales",
         imageAlt:
           "Escenario pop-up de los chircales de Bogotá con hornos de ladrillo humeantes",
       },
       {
         id: "e1-p2",
+        eyebrow: "1970 · La llegada",
+        title: "Familias del campo buscando ciudad",
+        image: "barrio",
+        imageAlt: "Familias campesinas llegando a la ladera de la montaña",
+      },
+      {
+        id: "e1-p3",
         eyebrow: "1970 · El oficio",
         title: "Pisar el barro desde niños",
-        narration:
-          "[NARRACIÓN 2] Familias llegadas del campo entregaban su cuerpo al barro. Los niños se descalzaban para pisar la arcilla fría durante horas, sintiendo cómo la piel se rompía.",
-        image: sceneChircales,
+        image: "chircales",
         imageAlt: "Trabajo artesanal del ladrillo en un chircal",
         challenge: {
           kind: "forge",
@@ -131,12 +130,17 @@ export const ERAS: Era[] = [
         },
       },
       {
-        id: "e1-p3",
+        id: "e1-p4",
+        eyebrow: "1970 · Las manos de los abuelos",
+        title: "La gavera, el sol y la espalda",
+        image: "chircales",
+        imageAlt: "Manos moldeando ladrillos en gaveras de madera bajo el sol",
+      },
+      {
+        id: "e1-p5",
         eyebrow: "1970 · Las leñeras",
         title: "El humo que nunca se apagaba",
-        narration:
-          "[NARRACIÓN 3] Los hornos de carbón ardían noche y día. El humo denso se respiraba como se respira el aire, y la infancia se quemaba junto con los ladrillos.",
-        image: sceneLeneras,
+        image: "leneras",
         imageAlt: "Leñeras y hornos de carbón al atardecer",
         challenge: {
           kind: "order",
@@ -154,14 +158,39 @@ export const ERAS: Era[] = [
         },
       },
       {
-        id: "e1-p4",
+        id: "e1-p6",
+        eyebrow: "1970 · La jornada",
+        title: "Trabajo de sol a sol, salario de nadie",
+        image: "leneras",
+        imageAlt: "Trabajadores cargando ladrillos junto a los hornos",
+        challenge: {
+          kind: "quiz",
+          prompt: "¿Quiénes trabajaban en los chircales?",
+          hint: "No era un trabajo de una sola persona.",
+          options: [
+            "Solo hombres adultos contratados por la ciudad",
+            "Familias enteras: abuelos, padres, madres, niñas y niños",
+            "Obreros llegados de otros países",
+            "Empresas industriales con máquinas",
+          ],
+          answerIndex: 1,
+          successText:
+            "Familias completas entregaban su cuerpo al barro para que la ciudad creciera.",
+        },
+      },
+      {
+        id: "e1-p7",
         eyebrow: "1970 · El olvido",
         title: "Cerros lastimados, casas levantadas",
-        narration:
-          "[NARRACIÓN 4] Cuando la tierra se agotó, las ladrilleras se fueron y dejaron cerros rotos y familias sin empleo. Con los restos del suelo, esas mismas manos levantaron sus casas.",
-        quote: "Para las autoridades, esos barrios ni siquiera existían.",
-        image: sceneBarrio,
+        image: "barrio",
         imageAlt: "Barrio autoconstruido en la ladera de la montaña",
+      },
+      {
+        id: "e1-p8",
+        eyebrow: "1980 · La herencia",
+        title: "Un barrio que no aparecía en los mapas",
+        image: "barrio",
+        imageAlt: "Casas de ladrillo apiladas en la montaña al anochecer",
       },
     ],
   },
@@ -175,11 +204,16 @@ export const ERAS: Era[] = [
     pages: [
       {
         id: "e2-p1",
-        eyebrow: "2007 – 2012 · La semilla",
+        eyebrow: "2007 · Los nietos",
+        title: "Crecer escuchando a los abuelos",
+        image: "jovenes",
+        imageAlt: "Jóvenes del barrio escuchando historias de sus abuelos",
+      },
+      {
+        id: "e2-p2",
+        eyebrow: "2012 · La semilla",
         title: "Ocho muchachos filosofando en la esquina",
-        narration:
-          "[NARRACIÓN 5] Los nietos de los chircales escuchaban a sus abuelos con rabia y admiración. Se juntaron en los parques a cuestionar una ciudad que les daba la espalda.",
-        image: sceneJovenes,
+        image: "jovenes",
         imageAlt: "Jóvenes con carpas y talleres abiertos en un parque del barrio",
         challenge: {
           kind: "quiz",
@@ -198,13 +232,18 @@ export const ERAS: Era[] = [
         },
       },
       {
-        id: "e2-p2",
-        eyebrow: "2012 – 2014 · El ahorro",
+        id: "e2-p3",
+        eyebrow: "2013 · La lucha",
+        title: "Tomarse la calle también cuesta",
+        image: "jovenes",
+        imageAlt: "Jóvenes organizando actividades comunitarias en la calle",
+      },
+      {
+        id: "e2-p4",
+        eyebrow: "2014 · El ahorro",
         title: "Peso a peso, una casa propia",
-        narration:
-          "[NARRACIÓN 6] Tomarse las calles trajo persecución. Necesitaban un lugar propio. Eligieron la ruta más larga: ahorrar colectivamente, moneda a moneda.",
-        image: sceneJovenes,
-        imageAlt: "Jóvenes organizando actividades comunitarias",
+        image: "jovenes",
+        imageAlt: "Jóvenes reuniendo el ahorro colectivo del grupo",
         challenge: {
           kind: "forge",
           prompt:
@@ -216,12 +255,10 @@ export const ERAS: Era[] = [
         },
       },
       {
-        id: "e2-p3",
+        id: "e2-p5",
         eyebrow: "2015 · La casa",
         title: "La casa de los rockeros",
-        narration:
-          "[NARRACIÓN 7] Arreglaron techos, levantaron muros y pidieron ayuda al vecindario. Llegaron sillas, mesas y toneladas de libros viejos. Los niños llegaron antes que los jóvenes.",
-        image: sceneBiblioteca,
+        image: "biblioteca",
         imageAlt: "Casa comunitaria convertida en biblioteca, niñas y niños leyendo",
         challenge: {
           kind: "order",
@@ -238,13 +275,17 @@ export const ERAS: Era[] = [
         },
       },
       {
-        id: "e2-p4",
+        id: "e2-p6",
+        eyebrow: "2016 · Los primeros lectores",
+        title: "Los niños llegaron antes que los libros",
+        image: "biblioteca",
+        imageAlt: "Niñas y niños leyendo en la sala de la biblioteca comunitaria",
+      },
+      {
+        id: "e2-p7",
         eyebrow: "2017 · El nombre",
         title: "Raíz de Barro",
-        narration:
-          "[NARRACIÓN 8] Escogieron ese nombre para honrar a los abuelos que moldearon la tierra en los hornos. La arcilla ya no significa cadenas: es la fuerza con la que se moldea un futuro digno.",
-        quote: "«La biblioteca nos encontró a nosotros.» — Nacho, fundador",
-        image: sceneRaiz,
+        image: "raiz",
         imageAlt: "Manos de barro moldeando una casa y un libro sobre raíces de arcilla",
         challenge: {
           kind: "quiz",
@@ -261,6 +302,27 @@ export const ERAS: Era[] = [
             "Las raíces vienen del sudor y la injusticia; la casa, de la comunidad.",
         },
       },
+      {
+        id: "e2-p8",
+        eyebrow: "2020 · La comunidad",
+        title: "Una biblioteca que también es cocina, escuela y refugio",
+        image: "biblioteca",
+        imageAlt: "Vecinos y vecinas compartiendo en la biblioteca comunitaria",
+      },
+      {
+        id: "e2-p9",
+        eyebrow: "Hoy · El presente",
+        title: "La misma arcilla, otras manos",
+        image: "raiz",
+        imageAlt: "Manos jóvenes sosteniendo un libro que brota de raíces de barro",
+        challenge: {
+          kind: "forge",
+          prompt: "Siembra la raíz: cada toque es una historia que se sigue contando.",
+          taps: 6,
+          actionLabel: "Sembrar memoria",
+          successText: "La historia sigue en tus manos.",
+        },
+      },
     ],
   },
 ];
@@ -268,5 +330,7 @@ export const ERAS: Era[] = [
 /** Texto de la pantalla final. */
 export const ENDING = {
   title: "Nuestra historia sigue en tus manos",
-  text: "[NARRACIÓN FINAL] Del barro de los chircales a los libros de la biblioteca: la misma arcilla, otras manos, otro futuro.",
+  text: "Del barro de los chircales a los libros de la biblioteca: la misma arcilla, otras manos, otro futuro.",
 };
+
+export const DEFAULT_CONTENT: GameContent = { eras: ERAS, ending: ENDING };
