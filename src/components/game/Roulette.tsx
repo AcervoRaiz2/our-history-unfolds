@@ -6,22 +6,35 @@ type Props = {
   targetYear: number;
   title: string;
   subtitle: string;
+  tagline: string;
+  /** Casillas visibles de la ruleta (editables). */
+  years?: number[];
+  labels: { spin: string; spinning: string; landedPrefix: string; opening: string };
   /** Estética de fallo/reinicio para el segundo giro. */
   broken?: boolean;
   onFinish: (year: number) => void;
 };
 
-const SECTORS = ROULETTE_YEARS.length;
-const SECTOR_DEG = 360 / SECTORS;
-
-export function Roulette({ targetYear, title, subtitle, broken, onFinish }: Props) {
+export function Roulette({
+  targetYear,
+  title,
+  subtitle,
+  tagline,
+  years,
+  labels,
+  broken,
+  onFinish,
+}: Props) {
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [landed, setLanded] = useState(false);
 
+  const wheelYears = years?.length ? years : [...ROULETTE_YEARS];
+  const SECTOR_DEG = 360 / wheelYears.length;
+
   const spin = () => {
     if (spinning || landed) return;
-    const index = ROULETTE_YEARS.indexOf(targetYear as (typeof ROULETTE_YEARS)[number]);
+    const index = wheelYears.indexOf(targetYear);
     const safeIndex = index < 0 ? 0 : index;
     // La aguja apunta arriba (12 en punto). Centramos el sector objetivo ahí.
     const target = 360 * 6 - (safeIndex * SECTOR_DEG + SECTOR_DEG / 2);

@@ -35,7 +35,7 @@ export function GlitchOverlay({ onExit, texts }: Props) {
             onClick={onExit}
             className="mt-9 animate-fade-in rounded-full border border-ember/60 bg-transparent px-10 py-4 font-display text-xs uppercase tracking-[0.4em] text-ember transition hover:bg-ember hover:text-ink"
           >
-            Reparar la línea del tiempo
+            {texts.button}
           </button>
         )}
       </div>
