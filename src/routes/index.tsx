@@ -55,7 +55,7 @@ function Game() {
       {phase === "roulette-2" && (
         <Roulette
           broken
-          targetYear={ERAS[1]!.year}
+          targetYear={(ERAS[1] ?? ERAS[0]!).year}
           title="La rueda vuelve a girar"
           subtitle="Reiniciando la memoria"
           onFinish={() => setPhase("era-2")}
