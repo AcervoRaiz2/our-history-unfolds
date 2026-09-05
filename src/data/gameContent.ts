@@ -377,4 +377,10 @@ export const ENDING = {
   text: "Del barro de los chircales a los libros de la biblioteca: la misma arcilla, otras manos, otro futuro.",
 };
 
-export const DEFAULT_CONTENT: GameContent = { eras: ERAS, ending: ENDING };
+export const DEFAULT_CONTENT: GameContent = {
+  eras: ERAS,
+  ending: ENDING,
+  rouletteYears: [...ROULETTE_YEARS],
+  images: {},
+  ui: DEFAULT_UI,
+};
