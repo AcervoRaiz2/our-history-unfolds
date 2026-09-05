@@ -63,7 +63,10 @@ function Game() {
       )}
 
       {phase === "era-2" && (
-        <PopupBook era={ERAS[1]!} onComplete={() => setPhase("ending")} />
+        <PopupBook
+          era={ERAS[1] ?? ERAS[0]!}
+          onComplete={() => setPhase("ending")}
+        />
       )}
 
       {phase === "ending" && (
