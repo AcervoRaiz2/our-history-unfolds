@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Era } from "@/data/gameContent";
+import { resolveImage, type Era } from "@/data/gameContent";
 import { ChallengePanel } from "./ChallengePanel";
 
 type Props = {
