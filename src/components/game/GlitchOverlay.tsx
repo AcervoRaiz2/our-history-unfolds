@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 type Props = {
   /** Se llama cuando el jugador acepta volver a la ruleta. */
   onExit: () => void;
+  texts: { title: string; text: string; button: string };
 };
 
 /** Fallo visual interactivo que expulsa al jugador de vuelta a la ruleta. */

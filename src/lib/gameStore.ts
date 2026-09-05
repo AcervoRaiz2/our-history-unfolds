@@ -41,9 +41,9 @@ export function loadContent(): GameContent {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_CONTENT;
-    const parsed = JSON.parse(raw) as GameContent;
+    const parsed = JSON.parse(raw) as Partial<GameContent>;
     if (!parsed?.eras?.length) return DEFAULT_CONTENT;
-    return parsed;
+    return withDefaults(parsed);
   } catch {
     return DEFAULT_CONTENT;
   }
