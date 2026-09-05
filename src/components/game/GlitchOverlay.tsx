@@ -7,7 +7,7 @@ type Props = {
 };
 
 /** Fallo visual interactivo que expulsa al jugador de vuelta a la ruleta. */
-export function GlitchOverlay({ onExit }: Props) {
+export function GlitchOverlay({ onExit, texts }: Props) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -27,12 +27,9 @@ export function GlitchOverlay({ onExit }: Props) {
       />
       <div className="relative max-w-lg text-center">
         <h2 className="animate-glitch font-display text-3xl text-ember sm:text-5xl">
-          MEMORIA INTERRUMPIDA
+          {texts.title}
         </h2>
-        <p className="mt-5 font-body text-lg text-parchment/80">
-          Las páginas se rompen: la descendencia de los chircales se dispersa en el
-          tiempo. El libro no puede seguir sin volver a la rueda.
-        </p>
+        <p className="mt-5 font-body text-lg text-parchment/80">{texts.text}</p>
         {ready && (
           <button
             onClick={onExit}
