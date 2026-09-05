@@ -85,13 +85,54 @@ export type Era = {
   pages: Page[];
 };
 
+/** Todos los textos de pantalla y botones del juego. */
+export type UiTexts = {
+  intro: { title: string; subtitle: string; tagline: string };
+  second: { title: string; subtitle: string; tagline: string };
+  roulette: { spin: string; spinning: string; landedPrefix: string; opening: string };
+  glitch: { title: string; text: string; button: string };
+  book: { prev: string; next: string; locked: string };
+  ending: { button: string };
+};
+
 export type GameContent = {
   eras: Era[];
   ending: { title: string; text: string };
+  /** Casillas visibles de la ruleta. */
+  rouletteYears: number[];
+  /** Imágenes propias subidas desde el editor: nombre → data URL. */
+  images: Record<string, string>;
+  ui: UiTexts;
 };
 
-/** Casillas de la ruleta. */
+/** Casillas de la ruleta (valor por defecto). */
 export const ROULETTE_YEARS = [1970, 1985, 1994, 2001, 2007, 2012, 2015, 2020] as const;
+
+export const DEFAULT_UI: UiTexts = {
+  intro: {
+    title: "Nuestra historia en tus manos",
+    subtitle: "Biblioteca Comunitaria Raíz de Barro",
+    tagline: "Gira la rueda del tiempo y deja que la historia te encuentre.",
+  },
+  second: {
+    title: "La rueda vuelve a girar",
+    subtitle: "Reiniciando la memoria",
+    tagline: "La memoria se desordenó. Gira de nuevo para encontrar el hilo.",
+  },
+  roulette: {
+    spin: "Girar",
+    spinning: "Girando…",
+    landedPrefix: "Año",
+    opening: "EL LIBRO SE ABRE…",
+  },
+  glitch: {
+    title: "MEMORIA INTERRUMPIDA",
+    text: "Las páginas se rompen: la descendencia de los chircales se dispersa en el tiempo. El libro no puede seguir sin volver a la rueda.",
+    button: "Reparar la línea del tiempo",
+  },
+  book: { prev: "← Anterior", next: "Siguiente →", locked: "Bloqueado" },
+  ending: { button: "Volver a girar la rueda" },
+};
 
 export const ERAS: Era[] = [
   /* ======================= ÉPOCA 1 — 1970 ============================== */
