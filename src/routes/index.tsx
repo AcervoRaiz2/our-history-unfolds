@@ -31,6 +31,9 @@ type Phase = "roulette-1" | "era-1" | "glitch" | "roulette-2" | "era-2" | "endin
 
 function Game() {
   const [phase, setPhase] = useState<Phase>("roulette-1");
+  const content = useGameContent();
+  const ERAS = content.eras;
+  const ENDING = content.ending;
 
   return (
     <main className="relative min-h-screen">
