@@ -79,7 +79,7 @@ export function PopupBook({ era, onComplete }: Props) {
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-5 sm:p-10">
             <img
               key={page.id + "-img"}
-              src={page.image}
+              src={resolveImage(page.image)}
               alt={page.imageAlt}
               width={1536}
               height={1024}
@@ -114,7 +114,7 @@ export function PopupBook({ era, onComplete }: Props) {
                   style={{ backfaceVisibility: "hidden" }}
                 >
                   <img
-                    src={page.image}
+                    src={resolveImage(page.image)}
                     alt=""
                     className="h-full w-full object-cover opacity-70"
                   />
@@ -128,7 +128,7 @@ export function PopupBook({ era, onComplete }: Props) {
                   }}
                 >
                   <img
-                    src={flipTarget.image}
+                    src={resolveImage(flipTarget.image)}
                     alt=""
                     className="h-full w-full object-cover opacity-70"
                   />
