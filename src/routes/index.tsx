@@ -87,6 +87,13 @@ function Game() {
           </div>
         </section>
       )}
+
+      <Link
+        to="/editor"
+        className="fixed bottom-3 right-4 z-50 font-display text-[0.55rem] uppercase tracking-[0.3em] text-parchment/30 transition hover:text-gold"
+      >
+        Editar
+      </Link>
     </main>
   );
 }
