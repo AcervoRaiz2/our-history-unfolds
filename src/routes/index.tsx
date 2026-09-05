@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ERAS, ENDING } from "@/data/gameContent";
+import { useGameContent } from "@/lib/gameStore";
 import { Roulette } from "@/components/game/Roulette";
 import { PopupBook } from "@/components/game/PopupBook";
 import { GlitchOverlay } from "@/components/game/GlitchOverlay";
