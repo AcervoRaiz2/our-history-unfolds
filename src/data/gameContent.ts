@@ -29,8 +29,11 @@ export const IMAGE_LIBRARY: Record<string, string> = {
 };
 
 /** Convierte una clave de imagen (o URL / data URL) en algo mostrable. */
-export function resolveImage(value: string): string {
-  return IMAGE_LIBRARY[value] ?? value;
+export function resolveImage(
+  value: string,
+  custom?: Record<string, string>,
+): string {
+  return custom?.[value] ?? IMAGE_LIBRARY[value] ?? value;
 }
 
 /** Desafío tipo pregunta: elegir la opción correcta. */
