@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ERAS, ENDING } from "@/data/gameContent";
+import { useGameContent } from "@/lib/gameStore";
 import { Roulette } from "@/components/game/Roulette";
 import { PopupBook } from "@/components/game/PopupBook";
 import { GlitchOverlay } from "@/components/game/GlitchOverlay";
@@ -31,6 +31,9 @@ type Phase = "roulette-1" | "era-1" | "glitch" | "roulette-2" | "era-2" | "endin
 
 function Game() {
   const [phase, setPhase] = useState<Phase>("roulette-1");
+  const content = useGameContent();
+  const ERAS = content.eras;
+  const ENDING = content.ending;
 
   return (
     <main className="relative min-h-screen">
@@ -52,7 +55,7 @@ function Game() {
       {phase === "roulette-2" && (
         <Roulette
           broken
-          targetYear={ERAS[1]!.year}
+          targetYear={(ERAS[1] ?? ERAS[0]!).year}
           title="La rueda vuelve a girar"
           subtitle="Reiniciando la memoria"
           onFinish={() => setPhase("era-2")}
@@ -60,7 +63,10 @@ function Game() {
       )}
 
       {phase === "era-2" && (
-        <PopupBook era={ERAS[1]!} onComplete={() => setPhase("ending")} />
+        <PopupBook
+          era={ERAS[1] ?? ERAS[0]!}
+          onComplete={() => setPhase("ending")}
+        />
       )}
 
       {phase === "ending" && (
@@ -81,6 +87,13 @@ function Game() {
           </div>
         </section>
       )}
+
+      <Link
+        to="/editor"
+        className="fixed bottom-3 right-4 z-50 font-display text-[0.55rem] uppercase tracking-[0.3em] text-parchment/30 transition hover:text-gold"
+      >
+        Editar
+      </Link>
     </main>
   );
 }
